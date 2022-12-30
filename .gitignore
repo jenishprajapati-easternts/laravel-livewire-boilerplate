@@ -7,7 +7,6 @@
 .phpunit.result.cache
 .idea
 .history
-/public/
 Homestead.json
 Homestead.yaml
 npm-debug.log
