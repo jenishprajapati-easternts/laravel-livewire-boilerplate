@@ -15,9 +15,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->enum('user_type', [0, 1, 2])->default('0')->comment('0-admin; 1-author; 2-user'); // admin, author, user
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('email')->nullable()->unique();
-            $table->enum('is_admin', [0, 1])->comment('0-User; 1-Admin')->nullable();
+            $table->json('liked_posts')->nullable();
+            $table->json('disliked_posts')->nullable();
+            $table->json('favourite_posts')->nullable();
+            $table->json('favourite_categories')->nullable();
+            $table->json('preferences')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();

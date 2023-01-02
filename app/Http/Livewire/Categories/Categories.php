@@ -4,13 +4,45 @@ namespace App\Http\Livewire\Categories;
 
 use App\Models\Category;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Categories extends Component
 {
 
-    public $categories, $name, $color, $category_id;
+    use WithPagination;
+
+    public $name, $color, $category_id;
     public $isOpen = 0;
-    
+
+    public $confirmingCategoryDeletion = false;
+    public $search = '';
+    public $orderColumn = "name";
+    public $sortOrder = "asc";
+    public $sortLink = '<svg class="h-4 w-4 text-gray-800"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"><polyline points="18 15 12 9 6 15" /></svg>';
+
+    public function updated()
+    {
+        $this->resetPage();
+    }
+
+
+    public function sortOrder($columnName = "")
+    {
+        $caretOrder = "18 15 12 9 6 15";
+        if ($this->sortOrder == 'asc') {
+            $this->sortOrder = 'desc';
+            $caretOrder = "6 9 12 15 18 9";
+        } else {
+            $this->sortOrder = 'asc';
+            $caretOrder = "18 15 12 9 6 15";
+        }
+
+        $this->sortLink = '<svg class="h-4 w-4 text-gray-800"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"><polyline points="' . $caretOrder . '" /></svg>';
+
+        $this->orderColumn = $columnName;
+    }
+
+
     /**
      * render
      *
@@ -18,10 +50,21 @@ class Categories extends Component
      */
     public function render()
     {
-        $this->categories = Category::all();
-        return view('livewire.categories.categories');
+
+        $categories = Category::orderby($this->orderColumn, $this->sortOrder)->select('*');
+
+        if (!empty($this->search)) {
+
+            $categories->orWhere('name', 'like', "%" . $this->search . "%");
+        }
+
+        $categories = $categories->paginate(10);
+
+        return view('livewire.categories.categories', [
+            'categories' => $categories,
+        ]);
     }
-    
+
     /**
      * store
      *
@@ -33,29 +76,42 @@ class Categories extends Component
             'name' => 'required',
             'color' => 'required',
         ]);
-        
+
         Category::updateOrCreate(['id' => $this->category_id], [
             'name' => $this->name,
             'color' => $this->color
         ]);
-        
+
         session()->flash('message', $this->category_id ? 'Category Updated Successfully.' : 'Category Created Successfully.');
         $this->closeModal();
         $this->resetInputFields();
     }
-    
+
+
     /**
-     * delete
+     * confirmItemDeletion
      *
      * @param  mixed $id
      * @return void
      */
-    public function delete($id)
+    public function confirmCategoryDeletion($id)
     {
-        Category::find($id)->delete();
+        $this->confirmingCategoryDeletion = $id;
+    }
+
+    /**
+     * deleteItem
+     *
+     * @param  mixed $category
+     * @return void
+     */
+    public function deleteCategory(Category $category)
+    {
+        $category->delete();
+        $this->confirmingCategoryDeletion = false;
         session()->flash('message', 'Category Deleted Successfully.');
     }
-    
+
     /**
      * edit
      *
@@ -70,7 +126,7 @@ class Categories extends Component
         $this->color = $category->color;
         $this->openModal();
     }
-    
+
     /**
      * create
      *
@@ -81,7 +137,7 @@ class Categories extends Component
         $this->resetInputFields();
         $this->openModal();
     }
-    
+
     /**
      * openModal
      *
@@ -91,7 +147,7 @@ class Categories extends Component
     {
         $this->isOpen = true;
     }
-    
+
     /**
      * closeModal
      *
@@ -101,7 +157,7 @@ class Categories extends Component
     {
         $this->isOpen = false;
     }
-    
+
     /**
      * resetInputFields
      *

@@ -10,8 +10,7 @@
                 <div class="font-bold text-xl mb-2">{{ $post->title }}</div>
                 <div class="flex">
                     by&nbsp;<span class="italic">{{ $post->author->first_name . ' ' . $post->author->last_name }}</span>
-                    &nbsp;in&nbsp;<a href="{{ url('dashboard/category/' . $post->category->id . '/posts') }}"
-                        class="underline">{{ $post->category->title }}</a>&nbsp;on&nbsp;{{ $post->updated_at->format('F, d Y') }}
+                    &nbsp;in&nbsp;<a href="{{ url('admin/category/' . $post->category->id . '/posts') }}" class="underline">{{ $post->category->title }}</a>&nbsp;on&nbsp;{{ $post->updated_at->format('F, d Y') }}
                 </div>
                 <div class="grid grid-flow-col">
                     @foreach ($post->images as $image)
@@ -20,13 +19,7 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="grid grid-flow-col">
-                    @foreach ($post->videos as $video)
-                    <div class="px-6 py-4">
-                        <img src="{{ $video->url }}" alt="{{ $video->title }}" width="300" height="200">
-                    </div>
-                    @endforeach
-                </div>
+
                 <div class="text-gray-700 text-base">
                     {!! $post->content !!}
                 </div>
@@ -37,7 +30,7 @@
                     @if (count($tags) > 0)
                     Tags:
                     @foreach ($tags as $key => $tag)
-                    <a href="{{ url('dashboard/tags/' . $tag . '/posts') }}" class="underline px-1">{{ $key }}</a>
+                    <a href="{{ url('admin/tags/' . $tag . '/posts') }}" class="underline px-1">{{ $key }}</a>
                     @endforeach
                     @endif
                 </div>

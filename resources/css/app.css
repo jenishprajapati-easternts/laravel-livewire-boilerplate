@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+img, svg, video, canvas, audio, iframe, embed, object {
+     display: inline !important;
+    vertical-align: middle;
+}

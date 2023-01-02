@@ -26,7 +26,16 @@ class User extends Authenticatable
      * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'liked_posts',
+        'disliked_posts',
+        'favourite_posts',
+        'favourite_categories',
+        'preferences',
+        'remember_token',
     ];
 
     /**
@@ -58,4 +67,24 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * comments
+     *
+     * @return void
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'author_id', 'id');
+    }
+
+    /**
+     * posts
+     *
+     * @return void
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id', 'id');
+    }
 }

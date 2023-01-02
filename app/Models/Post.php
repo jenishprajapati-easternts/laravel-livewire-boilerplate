@@ -60,16 +60,6 @@ class Post extends Model
     }
 
     /**
-     * videos
-     *
-     * @return void
-     */
-    public function videos()
-    {
-        return $this->hasMany(Video::class);
-    }
-
-    /**
      * tags
      *
      * @return void
