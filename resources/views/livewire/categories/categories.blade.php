@@ -29,50 +29,8 @@
             @include('livewire.categories.create')
             @endif
 
-            <table class="table-fixed w-full">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th width="22%" class="px-4 py-2 sort" wire:click="sortOrder('name')">Name {!! $sortLink !!}</th>
-                        <th width="22%" class="px-4 py-2 sort" wire:click="sortOrder('color')">Color {!! $sortLink !!}</th>
-                        <th width="22%" class="px-4 py-2 sort" wire:click="sortOrder('status')">Status {!! $sortLink !!}</th>
-                        <th class="px-4 py-2">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if ($categories->count())
-                    @foreach($categories as $category)
-                    <tr wire:loading.class="opacity-50">
-                        <td class="border px-4 py-2">{{ $category->name }}</td>
-                        <td class="border px-4 py-2">
-                            <span style="background-color: {{ $category->color }};">&emsp;</span> {{ $category->color }}
-                        </td>
-                        <td class="border px-4 py-2">{{ ($category->status == '1') ? 'Active' : 'Deactive'}}</td>
-                        <td class="border px-4 py-2">
-                            <button wire:click="edit({{ $category->id }})" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                                Edit
-                            </button>
-                            <a href="{{ url('admin/categories/'. $category->id .'/posts') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                                Show All Posts
-                            </a>
+            <livewire:livewire-datatables searchable="name, color, status" exportable />
 
-                            <x-jet-danger-button wire:click="confirmCategoryDeletion( {{ $category->id}})" wire:loading.attr="disabled">
-                                Delete
-                            </x-jet-danger-button>
-
-                        </td>
-                    </tr>
-                    @endforeach
-                    @else
-                    <tr>
-                        <td colspan="3" class="border px-4 py-2">
-                            <div class="flex justify-center items-center">
-                                <span class="font-medium py-8 text-cool-gray-500 text-xl">No record found...</span>
-                            </div>
-                        </td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
         </div>
         <div class="py-4">
             {{ $categories->links() }}
