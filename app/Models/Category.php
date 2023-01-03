@@ -16,7 +16,7 @@ class Category extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name', 'color', 'meta_data',
+        'name', 'color', 'meta_data', 'status'
     ];
 
     /**
@@ -28,6 +28,4 @@ class Category extends Model
     {
         return $this->hasMany(Post::class);
     }
-
-    
 }

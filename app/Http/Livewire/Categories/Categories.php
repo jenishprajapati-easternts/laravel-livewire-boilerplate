@@ -5,13 +5,14 @@ namespace App\Http\Livewire\Categories;
 use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Validation\Rule;
 
 class Categories extends Component
 {
 
     use WithPagination;
 
-    public $name, $color, $category_id;
+    public $name, $color, $status, $category_id;
     public $isOpen = 0;
 
     public $confirmingCategoryDeletion = false;
@@ -20,12 +21,23 @@ class Categories extends Component
     public $sortOrder = "asc";
     public $sortLink = '<svg class="h-4 w-4 text-gray-800"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"><polyline points="18 15 12 9 6 15" /></svg>';
 
+    /**
+     * updated
+     *
+     * @return void
+     */
     public function updated()
     {
         $this->resetPage();
     }
 
 
+    /**
+     * sortOrder
+     *
+     * @param  mixed $columnName
+     * @return void
+     */
     public function sortOrder($columnName = "")
     {
         $caretOrder = "18 15 12 9 6 15";
@@ -54,8 +66,8 @@ class Categories extends Component
         $categories = Category::orderby($this->orderColumn, $this->sortOrder)->select('*');
 
         if (!empty($this->search)) {
-
             $categories->orWhere('name', 'like', "%" . $this->search . "%");
+            $categories->orWhere('color', 'like', "%" . $this->search . "%");
         }
 
         $categories = $categories->paginate(10);
@@ -75,11 +87,13 @@ class Categories extends Component
         $this->validate([
             'name' => 'required',
             'color' => 'required',
+            'status' => ['required', Rule::in(['0', '1'])],
         ]);
 
         Category::updateOrCreate(['id' => $this->category_id], [
             'name' => $this->name,
-            'color' => $this->color
+            'color' => $this->color,
+            'status' => $this->status
         ]);
 
         session()->flash('message', $this->category_id ? 'Category Updated Successfully.' : 'Category Created Successfully.');
@@ -124,6 +138,7 @@ class Categories extends Component
         $this->category_id = $id;
         $this->name = $category->name;
         $this->color = $category->color;
+        $this->status = $category->status;
         $this->openModal();
     }
 
@@ -168,5 +183,6 @@ class Categories extends Component
         $this->name = '';
         $this->color = '';
         $this->category_id = '';
+        $this->status = '';
     }
 }

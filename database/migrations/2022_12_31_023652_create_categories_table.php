@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('color')->nullable();
             $table->json('meta_data')->nullable();
+            $table->enum('status', [0, 1])->nullable()->comment('0-Deactive; 1-Active');
             $table->timestamps();
             $table->softDeletes();
         });
