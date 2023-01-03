@@ -20,16 +20,17 @@
             </button>
 
             <!-- search -->
-            <div class="py-4 space-y-4 w-1/4">
+            <!-- <div class="py-4 space-y-4 w-1/4">
                 <x-jet-input class="block mt-1 w-full" type="text" wire:model="search" placeholder="Search..." />
-            </div>
+            </div> -->
 
 
             @if($isOpen)
             @include('livewire.categories.create')
             @endif
 
-            <livewire:livewire-datatables searchable="name, color, status" exportable />
+
+            <livewire:datatable model="App\Models\Category" sort="name|asc" include="name, color, status" searchable="name, color" hideable="select" exportable />
 
         </div>
         <div class="py-4">
