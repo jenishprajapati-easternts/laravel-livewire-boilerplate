@@ -56,28 +56,6 @@ class Categories extends Component
 
 
     /**
-     * render
-     *
-     * @return void
-     */
-    public function render()
-    {
-
-        $categories = Category::orderby($this->orderColumn, $this->sortOrder)->select('*');
-
-        if (!empty($this->search)) {
-            $categories->orWhere('name', 'like', "%" . $this->search . "%");
-            $categories->orWhere('color', 'like', "%" . $this->search . "%");
-        }
-
-        $categories = $categories->paginate(10);
-
-        return view('livewire.categories.categories', [
-            'categories' => $categories,
-        ]);
-    }
-
-    /**
      * store
      *
      * @return void
@@ -99,6 +77,7 @@ class Categories extends Component
         session()->flash('message', $this->category_id ? 'Category Updated Successfully.' : 'Category Created Successfully.');
         $this->closeModal();
         $this->resetInputFields();
+        $this->emit('refreshDatatable');
     }
 
 
