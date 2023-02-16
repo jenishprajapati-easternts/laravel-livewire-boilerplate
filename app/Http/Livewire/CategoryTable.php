@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\CategoriesExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -9,6 +10,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Category;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryTable extends DataTableComponent
 {
@@ -84,7 +86,18 @@ class CategoryTable extends DataTableComponent
         return [
             'activate' => 'Activate',
             'deactivate' => 'Deactivate',
+            'export' => 'Export',
         ];
+    }
+
+
+    public function export()
+    {
+        $category = $this->getSelected();
+
+        $this->clearSelected();
+
+        return Excel::download(new CategoriesExport($category), 'Categories.csv');
     }
 
     /**
