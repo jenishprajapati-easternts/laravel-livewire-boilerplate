@@ -4,16 +4,17 @@ namespace App\Exports;
 
 use App\Models\Category;
 use App\Models\Inclusion;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class CategoriesExport implements FromCollection, WithHeadings
 {
-    protected $category;
+    protected $categoryIds;
 
-    public function __construct($category)
+    public function __construct($categoryIds)
     {
-        $this->category = $category;
+        $this->categoryIds = $categoryIds;
     }
 
     /**
@@ -21,7 +22,16 @@ class CategoriesExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return  Category::select('name', 'color', 'status')->orderBy('id', 'DESC')->get();
+        if (!empty($this->categoryIds)) {
+            return  Category::select('name', 'color', DB::raw('(CASE WHEN status = "0" THEN "Deactive" WHEN status = "1" THEN "Active" ELSE ""  END) AS status'))
+                ->whereIn('id', $this->categoryIds)
+                ->orderBy('id', 'DESC')
+                ->get();
+        } else {
+            return  Category::select('name', 'color', DB::raw('(CASE WHEN status = "0" THEN "Deactive" WHEN status = "1" THEN "Active" ELSE ""  END) AS status'))
+                ->orderBy('id', 'DESC')
+                ->get();
+        }
     }
 
     public function headings(): array

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Exports\CategoriesExport;
+use App\Http\Livewire\Categories\Categories;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
@@ -17,6 +18,8 @@ class CategoryTable extends DataTableComponent
     protected $model = Category::class;
 
 
+
+
     /**
      * configure
      *
@@ -25,7 +28,8 @@ class CategoryTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setHideBulkActionsWhenEmptyEnabled()
+            ->setDefaultSort('id', 'desc')
+            //->setHideBulkActionsWhenEmptyEnabled()
             ->setFilterLayoutSlideDown();
     }
 
@@ -59,7 +63,7 @@ class CategoryTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Actions')
+            /* Column::make('Actions')
                 ->label(
                     function ($row, Column $column) {
                         $delete = '<button wire:click="deleteCategory(' . $row->id . ')" class="inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150">
@@ -70,11 +74,15 @@ class CategoryTable extends DataTableComponent
                     </button>';
                         return $edit . $delete;
                     }
-                )->html(),
+                )->html(), */
 
+            Column::make('Actions')->label(function ($row, Column $column) {
+                return view('livewire.datatables_actions', ['row' => $row, 'form' => Categories::class]);
+            },)
 
         ];
     }
+
 
     /**
      * bulkActions
@@ -84,8 +92,8 @@ class CategoryTable extends DataTableComponent
     public function bulkActions(): array
     {
         return [
-            'activate' => 'Activate',
-            'deactivate' => 'Deactivate',
+            //'activate' => 'Activate',
+            //'deactivate' => 'Deactivate',
             'export' => 'Export',
         ];
     }
@@ -93,11 +101,11 @@ class CategoryTable extends DataTableComponent
 
     public function export()
     {
-        $category = $this->getSelected();
+        $categoryIds = $this->getSelected();
 
         $this->clearSelected();
 
-        return Excel::download(new CategoriesExport($category), 'Categories.csv');
+        return Excel::download(new CategoriesExport($categoryIds), 'Categories.csv');
     }
 
     /**
