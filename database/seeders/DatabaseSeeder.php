@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(100)->create();
+        \App\Models\User::factory(10)->create();
         \App\Models\Category::factory(10)->create();
         \App\Models\Comment::factory(2500)->create();
         \App\Models\Image::factory(2500)->create();
@@ -27,8 +27,20 @@ class DatabaseSeeder extends Seeder
                 'post_id' => mt_rand(1, 1500),
                 'tag_id' => mt_rand(1, 50),
                 'created_at' => now(),
-                'updated_at' => now()
+                'updated_at' => now(),
             ]);
         }
+
+        DB::table('countries')->insert(array(
+            array('name' => 'India', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Australia', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Canada', 'created_at' => now(), 'updated_at' => now()),
+        ));
+
+        DB::table('states')->insert(array(
+            array('country_id' => '1', 'name' => 'Gujarat', 'created_at' => now(), 'updated_at' => now()),
+            array('country_id' => '1', 'name' => 'Rajasthan', 'created_at' => now(), 'updated_at' => now()),
+            array('country_id' => '2', 'name' => 'Sydney', 'created_at' => now(), 'updated_at' => now()),
+        ));
     }
 }
