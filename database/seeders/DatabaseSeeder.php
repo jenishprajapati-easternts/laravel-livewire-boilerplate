@@ -42,5 +42,19 @@ class DatabaseSeeder extends Seeder
             array('country_id' => '1', 'name' => 'Rajasthan', 'created_at' => now(), 'updated_at' => now()),
             array('country_id' => '2', 'name' => 'Sydney', 'created_at' => now(), 'updated_at' => now()),
         ));
+
+        DB::table('cities')->insert(array(
+            array('state_id' => '1', 'name' => 'Surat', 'created_at' => now(), 'updated_at' => now()),
+            array('state_id' => '1', 'name' => 'Baroda', 'created_at' => now(), 'updated_at' => now()),
+            array('state_id' => '2', 'name' => 'Jaipur', 'created_at' => now(), 'updated_at' => now()),
+        ));
+
+        DB::table('hobbies')->insert(array(
+            array('name' => 'Sports', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Travelling', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Music', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Reading', 'created_at' => now(), 'updated_at' => now()),
+            array('name' => 'Social Activities', 'created_at' => now(), 'updated_at' => now()),
+        ));
     }
 }
