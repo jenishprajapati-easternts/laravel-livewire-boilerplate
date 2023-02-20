@@ -17,21 +17,9 @@
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('categories') }}" :active="request()->routeIs('categories')">
-                        {{ __('Categories') }}
+                    <x-jet-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                        {{ __('Users') }}
                     </x-jet-nav-link>
-
-
-                    <x-jet-nav-link href="{{ route('posts') }}" :active="request()->routeIs('posts')">
-                        {{ __('Posts') }}
-                    </x-jet-nav-link>
-
-
-
-                    <x-jet-nav-link href="{{ route('tags') }}" :active="request()->routeIs('tags')">
-                        {{ __('Tags') }}
-                    </x-jet-nav-link>
-
 
                     @else
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
