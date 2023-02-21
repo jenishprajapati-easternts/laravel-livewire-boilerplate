@@ -90,4 +90,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class, 'author_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function hobbies()
+    {
+        return $this->belongsToMany(Hobby::class, "hobby_user", "user_id", "hobby_id");
+    }
 }

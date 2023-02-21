@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_hobbies', function (Blueprint $table) {
+        Schema::create('hobby_user', function (Blueprint $table) {
             $table->unsignedInteger('user_id')->comment('users table ID');
             $table->unsignedInteger('hobby_id')->comment('hobbies table ID');
-
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_hobbies');
+        Schema::dropIfExists('hobby_user');
     }
 };

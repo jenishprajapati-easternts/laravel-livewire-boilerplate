@@ -7,11 +7,11 @@
 <div>
     <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="mt-10 sm:mt-0">
-            <div class="md:grid md:grid-cols-3 md:gap-12">
+            <div class="md:grid md:grid-cols-2 md:gap-12">
                 <div class="mt-5 md:col-span-2 md:mt-0">
                     <div class="overflow-hidden shadow sm:rounded-md">
                         <div class="bg-white px-4 py-5 sm:p-6">
-                            <br wire:submit.prevent="save">
+
                             <div class="grid grid-cols-6 gap-6">
                                 <div class="col-span-6 sm:col-span-3">
                                     <label for="first-name" class="block text-sm font-medium text-gray-700">First name *</label>
@@ -41,7 +41,8 @@
 
                                 <div class="col-span-6">
                                     <label for="street-address" class="block text-sm font-medium text-gray-700">Street address*</label>
-                                    <input type="text" wire:model="user.address" id="address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <!-- <input type="text" wire:model="user.address" id="address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"> -->
+                                    <textarea wire:model="user.address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" name="description" rows="5"></textarea>
                                     @error('user.address') <span class="text-red-500">{{ $message }}</span>@enderror
                                 </div>
 
@@ -82,16 +83,80 @@
                                     @error('user.city_id') <span class="text-red-500">{{ $message }}</span>@enderror
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-3">
+                                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                     <label for="mobile_no" class="block text-sm font-medium text-gray-700">Birthday*</label>
-                                    <input type="date" wire:model="user.dob" id="mobile_no" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <input type="date" id="datepicker" max="<?php echo date("Y-m-d"); ?>" wire:model="user.dob" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     @error('user.dob') <span class="text-red-500">{{ $message }}</span>@enderror
                                 </div>
+
+                                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                                    <label for="mobile_no" class="block text-sm font-medium text-gray-700">Gender*</label>
+
+                                    <div class="mt-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio" wire:model="user.gender" value="0">
+                                            <span class="ml-2">Female</span>
+                                        </label>
+                                        <label class="inline-flex items-center ml-6">
+                                            <input type="radio" class="form-radio" wire:model="user.gender" value="1">
+                                            <span class="ml-2">Male</span>
+                                        </label>
+                                    </div>
+                                    @error('user.gender') <span class="text-red-500">{{ $message }}</span>@enderror
+
+                                </div>
+
+
+                                <div class="col-span-6 sm:col-span-6 lg:col-span-2">
+                                    <label for="mobile_no" class="block text-sm font-medium text-gray-700">Hobbies*</label>
+
+                                    <div class="mt-2">
+                                        @foreach ($getHobbies as $key => $hobby)
+                                        <label class="inline-flex items-center">
+                                            <input type="checkbox" class="form-checkbox" value="{{ $hobby->id }}" id="exampleFormControlInput3" wire:model="hobbies">
+                                            <span class="ml-2">{{ $hobby->name }}</span>
+                                        </label>
+                                        @endforeach
+                                    </div>
+                                    @error('hobbies') <span class="text-red-500">{{ $message }}</span>@enderror
+                                    @error('hobbies.*') <span class="text-red-500">{{ $message }}</span>@enderror
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-6">
+                                    <!--  @if (!empty($galleries))
+                                    Image Preview:
+                                    <div class="flex space-x-4 items-start ...">
+                                        @foreach ($galleries as $galleries)
+                                        <div class="py-2">
+                                            <img src="{{ $galleries->temporaryUrl() }}">
+                                        </div>
+                                        @endforeach
+                                    </div>
+                                    @endif -->
+                                    <div class="mt-2">
+                                        <label for="galleries" class="block text-sm font-medium text-gray-700">Image Upload*</label>
+                                        <input type="file" max="5" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" wire:model="galleries" multiple>
+                                        <!-- <div wire:loading wire:target="galleries">Uploading...</div> -->
+
+                                    </div>
+
+                                    @error('galleries') <span class="text-red-500">{{ $message }}</span>@enderror
+                                    @error('galleries.*') <span class="text-red-500">{{ $message }}</span>@enderror
+
+                                </div>
+
+
 
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                            <button type="button" wire:click="createUser" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                            <x-jet-button wire:click="createUser">
+                                {{ __('Save') }}
+                            </x-jet-button>
+
+                            <a href="{{ route('users')}}" class="inline-block rounded border-2 border-neutral-800 px-6 pt-2 pb-[6px] text-xs font-medium uppercase leading-normal text-neutral-800 transition duration-150 ease-in-out hover:border-neutral-800 hover:bg-neutral-500 hover:bg-opacity-10 hover:text-neutral-800 focus:border-neutral-800 focus:text-neutral-800 focus:outline-none focus:ring-0 active:border-neutral-900 active:text-neutral-900 dark:border-neutral-900 dark:text-neutral-900 dark:hover:border-neutral-900 dark:hover:bg-neutral-100 dark:hover:bg-opacity-10 dark:hover:text-neutral-900 dark:focus:border-neutral-900 dark:focus:text-neutral-900 dark:active:border-neutral-900 dark:active:text-neutral-900" data-te-ripple-init>
+                                Cancel
+                            </a>
                         </div>
                     </div>
                 </div>

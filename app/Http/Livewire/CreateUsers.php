@@ -4,16 +4,23 @@ namespace App\Http\Livewire;
 
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Hobby;
 use App\Models\State;
 use App\Models\User;
+use App\Models\UserGallery;
+use App\Traits\UploadTrait;
 use Livewire\Component;
 use Illuminate\Validation\Rule;
+use Livewire\WithFileUploads;
 
 class CreateUsers extends Component
 {
 
+    use WithFileUploads, UploadTrait;
+
     public User $user;
     public $countries, $states, $cities;
+    public $hobbies = [], $galleries = [];
 
 
     /**
@@ -34,8 +41,10 @@ class CreateUsers extends Component
             'user.country_id' => 'required|integer|exists:countries,id,deleted_at,NULL',
             'user.state_id' => 'required|integer|exists:states,id,deleted_at,NULL',
             'user.city_id' => 'required|integer|exists:cities,id,deleted_at,NULL',
-            'user.hobby' => 'required|exists:hobbies,id,deleted_at,NULL|array',
-            'user.hobby.*' => 'required|integer',
+            'hobbies' => 'required|exists:hobbies,id,deleted_at,NULL|array',
+            'hobbies.*' => 'required|integer',
+            'galleries' => 'required|array|max:5',
+            'galleries.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
 
         ];
     }
@@ -84,7 +93,7 @@ class CreateUsers extends Component
      */
     public function render()
     {
-        return view('livewire.create-users');
+        return view('livewire.create-users', ['getHobbies' =>  Hobby::all()]);
     }
 
     /**
@@ -110,13 +119,31 @@ class CreateUsers extends Component
 
         $this->validate();
 
-        //$this->user->status = config('constants.user_status_id.verified');
+
+        $this->user->user_type = '1'; // User type id author or sub admin
         $this->user->save();
-        /* $this->user->assignRole($this->role_id);
-        redirect()->to('/users');
+
+        /* Insert multiple user galleries */
+        if (!empty($this->galleries)) {
+
+            $realPath = 'user/' . $this->user->id . '/';
+
+            foreach ($this->galleries as $image) {
+                $path = $this->uploadOne($image, '/public/' . $realPath);
+                UserGallery::create(['user_id' => $this->user->id, 'filename' => $realPath . pathinfo($path, PATHINFO_BASENAME)]);
+            }
+        }
+
+        /* Insert multiple hobbies */
+        if (!empty($this->hobbies)) {
+            $this->user->hobbies()->attach($this->hobbies); //this executes the insert-query
+        }
+
+
+        redirect()->to('/admin/users');
         session()->flash('message', 'User Created Successfully.');
 
-        if ($this->role_id == config('constants.users_roles_ids.client')) {
+        /* if ($this->role_id == config('constants.users_roles_ids.client')) {
             Mail::to($this->user->email)->queue(new WelcomeUser($this->user));
         } */
     }
