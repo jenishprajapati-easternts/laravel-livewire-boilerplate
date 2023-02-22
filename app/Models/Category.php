@@ -18,14 +18,4 @@ class Category extends Model
     protected $fillable = [
         'name', 'color', 'meta_data', 'status'
     ];
-
-    /**
-     * posts
-     *
-     * @return void
-     */
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
 }

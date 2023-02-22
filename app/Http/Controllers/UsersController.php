@@ -13,4 +13,11 @@ class UsersController extends Controller
 
         return view('create-user');
     }
+
+
+    public function viewUsers()
+    {
+
+        return view('livewire.users-list');
+    }
 }

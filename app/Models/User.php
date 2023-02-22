@@ -72,26 +72,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * comments
-     *
-     * @return void
-     */
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'author_id', 'id');
-    }
-
-    /**
-     * posts
-     *
-     * @return void
-     */
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'author_id', 'id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function hobbies()
