@@ -86,6 +86,11 @@ class CreateUsers extends Component
         ];
     }
 
+    /**
+     * messages
+     *
+     * @return void
+     */
     protected function messages()
     {
         return [
@@ -93,9 +98,6 @@ class CreateUsers extends Component
             'comment.*.required' => 'The comment field is required.',
         ];
     }
-
-
-
 
 
     // Fetch states of a country    
@@ -168,7 +170,6 @@ class CreateUsers extends Component
 
         $this->validate();
 
-
         $this->user->user_type = '1'; // User type id author or sub admin
         $this->user->save();
 
@@ -195,8 +196,6 @@ class CreateUsers extends Component
 
         $this->inputs = [];
 
-
-
         redirect()->to('/admin/users');
         session()->flash('message', 'User Created Successfully.');
 
@@ -214,5 +213,15 @@ class CreateUsers extends Component
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName, $this->rules());
+    }
+
+    /**
+     * cancel
+     *
+     * @return void
+     */
+    public function cancel()
+    {
+        redirect()->to('/admin/users');
     }
 }

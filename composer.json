@@ -12,7 +12,8 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.5",
-        "mediconesystems/livewire-datatables": "^0.10.0"
+        "mediconesystems/livewire-datatables": "^0.10.0",
+        "wireui/heroicons": "^2.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
