@@ -16,7 +16,7 @@ class UsersDatatables extends LivewireDatatable
 
     public function builder()
     {
-        return User::query()->where('user_type', '!=', '0');
+        return User::query()->where('user_type', '!=', '0')->orderBy('id', 'desc');
     }
 
     public function columns()

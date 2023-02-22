@@ -10,6 +10,7 @@
             <div class="md:grid md:grid-cols-2 md:gap-12">
                 <div class="mt-5 md:col-span-2 md:mt-0">
                     <div class="overflow-hidden shadow sm:rounded-md">
+
                         <div class="bg-white px-4 py-5 sm:p-6">
 
                             <div class="grid grid-cols-6 gap-6">
@@ -146,9 +147,38 @@
                                 </div>
 
 
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700">Comment*</label>
+                                    <input type="text" wire:model="comment.0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    @error('comment.0') <span class="text-red-500">{{ $message }}</span>@enderror
+                                </div>
+
+                                <div class="px-4 py-6 text-right sm:px-6">
+                                    <x-jet-button wire:click.prevent="add({{$i}})">
+                                        {{ __('Add') }}
+                                    </x-jet-button>
+                                </div>
+
+
+                                @foreach($inputs as $key => $value)
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <label class="block text-sm font-medium text-gray-700">Comment*</label>
+                                    <input type="text" wire:model="comment.{{ $value }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    @error('comment.'.$value) <span class="text-red-500">{{ $message }}</span>@enderror
+                                </div>
+
+                                <div class="px-4 py-6 text-right sm:px-6">
+                                    <x-jet-danger-button wire:click.prevent="remove({{$key}})">
+                                        {{ __('Remove') }}
+                                    </x-jet-danger-button>
+                                </div>
+
+                                @endforeach
 
                             </div>
                         </div>
+
                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
                             <x-jet-button wire:click="createUser">
                                 {{ __('Save') }}
@@ -158,6 +188,7 @@
                                 Cancel
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>

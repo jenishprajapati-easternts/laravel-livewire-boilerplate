@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Hobby;
 use App\Models\State;
 use App\Models\User;
+use App\Models\UserComment;
 use App\Models\UserGallery;
 use App\Traits\UploadTrait;
 use Livewire\Component;
@@ -19,8 +20,42 @@ class CreateUsers extends Component
     use WithFileUploads, UploadTrait;
 
     public User $user;
-    public $countries, $states, $cities;
+    public $countries, $states, $cities, $comment;
     public $hobbies = [], $galleries = [];
+    public $inputs  = [];
+    public $i = 1;
+    public $updateMode = false;
+
+
+    /**
+     * add
+     *
+     * @param  mixed $i
+     * @return void
+     */
+    public function add($i)
+    {
+        $i = $i + 1;
+        $this->i = $i;
+        array_push($this->inputs, $i);
+    }
+
+    /**
+     * remove
+     *
+     * @param  mixed $i
+     * @return void
+     */
+    public function remove($i)
+    {
+        unset($this->inputs[$i]);
+    }
+
+
+    private function resetInputFields()
+    {
+        $this->comment = '';
+    }
 
 
     /**
@@ -45,9 +80,23 @@ class CreateUsers extends Component
             'hobbies.*' => 'required|integer',
             'galleries' => 'required|array|max:5',
             'galleries.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'comment.0' => 'required',
+            'comment.*' => 'required',
 
         ];
     }
+
+    protected function messages()
+    {
+        return [
+            'comment.0.required' => 'The comment field is required.',
+            'comment.*.required' => 'The comment field is required.',
+        ];
+    }
+
+
+
+
 
     // Fetch states of a country    
     /**
@@ -138,6 +187,14 @@ class CreateUsers extends Component
         if (!empty($this->hobbies)) {
             $this->user->hobbies()->attach($this->hobbies); //this executes the insert-query
         }
+
+        /* Insert multiple user comments */
+        foreach ($this->comment as $key => $value) {
+            UserComment::create(['user_id' => $this->user->id, 'comment' => $this->comment[$key]]);
+        }
+
+        $this->inputs = [];
+
 
 
         redirect()->to('/admin/users');
