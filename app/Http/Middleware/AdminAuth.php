@@ -18,14 +18,18 @@ class AdminAuth
     public function handle(Request $request, Closure $next)
     {
         //check user is admin then redirect to admin dashboard
-        if (auth()->user()->user_type == '0' && Str::contains($request->url(), 'admin') == true) {
-            return $next($request);
-        } else if (auth()->user()->user_type == '0' && Str::contains($request->url(), 'admin') == false) { //check admin user then redirect to admin dashboard
-            return redirect('/admin/dashboard');
-        } else if (auth()->user()->user_type == '2' && Str::contains($request->url(), 'admin') == true) { //check user then redirect to user dashboard
-            return redirect('/dashboard');
+        if (!is_null(auth()->user())) {
+            if (auth()->user()->user_type == '0' && Str::contains($request->url(), 'admin') == true) {
+                return $next($request);
+            } else if (auth()->user()->user_type == '0' && Str::contains($request->url(), 'admin') == false) { //check admin user then redirect to admin dashboard
+                return redirect('/admin/dashboard');
+            } else if (auth()->user()->user_type == '2' && Str::contains($request->url(), 'admin') == true) { //check user then redirect to user dashboard
+                return redirect('/dashboard');
+            } else {
+                return $next($request);
+            }
         } else {
-            return $next($request);
+            return redirect()->route('login');
         }
     }
 }

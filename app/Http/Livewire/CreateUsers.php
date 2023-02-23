@@ -156,6 +156,7 @@ class CreateUsers extends Component
     {
 
         $this->user = new User;
+        //sleep(10);
         $this->countries = Country::all();
     }
 
@@ -165,7 +166,7 @@ class CreateUsers extends Component
      *
      * @return void
      */
-    public function createUser()
+    public function store()
     {
 
         $this->validate();

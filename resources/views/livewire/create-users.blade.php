@@ -189,7 +189,7 @@
                                 {{ __('Cancel') }}
                             </x-jet-secondary-button>
 
-                            <x-jet-button class="ml-3" wire:click="createUser" wire:loading.attr="disabled">
+                            <x-jet-button class="ml-3" wire:click="store()" wire:loading.attr="disabled">
                                 {{ __('Save') }}
                             </x-jet-button>
 
