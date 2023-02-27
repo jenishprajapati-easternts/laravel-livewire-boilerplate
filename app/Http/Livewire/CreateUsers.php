@@ -21,7 +21,7 @@ class CreateUsers extends Component
 
     public User $user;
     public $countries, $states, $cities, $comment;
-    public $hobbies = [], $galleries = [];
+    public $hobbies = [], $galleries = [], $multiple_options;
     public $inputs  = [];
     public $i = 1;
     public $updateMode = false;
@@ -82,6 +82,7 @@ class CreateUsers extends Component
             'galleries.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'comment.0' => 'required',
             'comment.*' => 'required',
+            'multiple_options' => 'required',
 
         ];
     }

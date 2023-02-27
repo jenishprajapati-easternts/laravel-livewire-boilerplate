@@ -118,7 +118,7 @@
                                     <x-jet-input-error for="hobbies.*" class="mt-2" />
                                 </div>
 
-                                <div class="col-span-6 sm:col-span-6">
+                                <div class="col-span-6 sm:col-span-3">
                                     <!--  @if (!empty($galleries))
                                     Image Preview:
                                     <div class="flex space-x-4 items-start ...">
@@ -135,6 +135,22 @@
                                     </div>
                                     <x-jet-input-error for="galleries" class="mt-2" />
                                     <x-jet-input-error for="galleries.*" class="mt-2" />
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <x-jet-label for="Multiple_options" value="{{ __('Multiple options') }}" />
+                                    <select multiple id="Multiple_options" wire:model="multiple_options" class="block w-full rounded-md border border-gray-300 bg-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option value="US">United States</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="FR">France</option>
+                                        <option value="DE">Germany</option>
+                                    </select>
+                                    <x-jet-input-error for="multiple_options" class="mt-2" />
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-3">
+                                    <x-jet-label for="Tags" value="{{ __('Tags') }}" />
+                                    <input type="text" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 rounded outline-none" id="tags" value="" autofocus />
                                 </div>
 
                                 <div class="flex flex-col col-span-6">
