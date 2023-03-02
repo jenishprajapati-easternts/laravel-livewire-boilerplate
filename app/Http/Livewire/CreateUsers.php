@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\UsersController;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Hobby;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Models\UserComment;
 use App\Models\UserGallery;
 use App\Traits\UploadTrait;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Illuminate\Validation\Rule;
 use Livewire\WithFileUploads;
@@ -21,7 +23,7 @@ class CreateUsers extends Component
 
     public User $user;
     public $countries, $states, $cities, $comment;
-    public $hobbies = [], $galleries = [], $multiple_options;
+    public $hobbies = [], $galleries = [], $tags = [], $multiple_options;
     public $inputs  = [];
     public $i = 1;
     public $updateMode = false;
@@ -82,7 +84,8 @@ class CreateUsers extends Component
             'galleries.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'comment.0' => 'required',
             'comment.*' => 'required',
-            'multiple_options' => 'required',
+            //'multiple_options' => 'required',
+            //'tags' => 'required',
 
         ];
     }
@@ -172,31 +175,20 @@ class CreateUsers extends Component
 
         $this->validate();
 
-        $this->user->user_type = '1'; // User type id author or sub admin
-        $this->user->save();
-
-        /* Insert multiple user galleries */
-        if (!empty($this->galleries)) {
-
-            $realPath = 'user/' . $this->user->id . '/';
-
-            foreach ($this->galleries as $image) {
-                $path = $this->uploadOne($image, '/public/' . $realPath);
-                UserGallery::create(['user_id' => $this->user->id, 'filename' => $realPath . pathinfo($path, PATHINFO_BASENAME)]);
-            }
-        }
-
-        /* Insert multiple hobbies */
-        if (!empty($this->hobbies)) {
-            $this->user->hobbies()->attach($this->hobbies); //this executes the insert-query
-        }
-
-        /* Insert multiple user comments */
-        foreach ($this->comment as $key => $value) {
-            UserComment::create(['user_id' => $this->user->id, 'comment' => $this->comment[$key]]);
-        }
-
-        $this->inputs = [];
+        $userData = [
+            'first_name' => $this->user->first_name,
+            'last_name' => $this->user->last_name,
+            'email' => $this->user->email,
+            'mobile_no' => $this->user->mobile_no,
+            'gender' => $this->user->gender,
+            'dob' => $this->user->dob,
+            'country_id' => $this->user->country_id,
+            'state_id' => $this->user->state_id,
+            'city_id' => $this->user->city_id,
+            'address' => $this->user->address,
+        ];
+        /* common code for user data insert into database */
+        UsersController::commonUserInsert($userData, $this->galleries, $this->hobbies, $this->comment);
 
         redirect()->to('/admin/users');
         session()->flash('message', 'User Created Successfully.');
